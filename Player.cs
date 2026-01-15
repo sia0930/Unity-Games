@@ -19,6 +19,12 @@ public class Player : MonoBehaviour
     private float shootInterval = 0.05f;
     private float lastShotTime = 0f;
 
+    [SerializeField]
+    private float burstShootInterval = 0.02f;
+
+    private bool isBurstActive = false;
+    private float burstEndTime = 0f;
+
     //Shoot Interval Control!
 
     // Update is called once per frame
@@ -60,12 +66,19 @@ public class Player : MonoBehaviour
 
             Shoot();
         }
+
+        if (isBurstActive && Time.time >= burstEndTime)
+        {
+            isBurstActive = false;
+        }
     }
 
     void Shoot()
     {
 
-        if (Time.time - lastShotTime > shootInterval)
+        float currentInterval = isBurstActive ? burstShootInterval : shootInterval;
+
+        if (Time.time - lastShotTime > currentInterval)
         {
 
             Instantiate(weapons[weaponIndex], shootTransform.position, Quaternion.identity);
@@ -97,6 +110,17 @@ public class Player : MonoBehaviour
         {
             weaponIndex = weapons.Length - 1;
         }
+    }
+
+    public void ActivateBurst(float duration)
+    {
+        if (duration <= 0f)
+        {
+            return;
+        }
+
+        isBurstActive = true;
+        burstEndTime = Mathf.Max(burstEndTime, Time.time + duration);
     }
 
 }

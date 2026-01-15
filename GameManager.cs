@@ -12,6 +12,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject gameOverPanel;
 
+    [SerializeField]
+    private int burstCoinInterval = 15;
+
+    [SerializeField]
+    private float burstDuration = 4f;
+
     private int coin = 0;
 
     [HideInInspector]
@@ -42,6 +48,15 @@ public class GameManager : MonoBehaviour
                 player.Upgrade();
             }
         }  
+
+        if (burstCoinInterval > 0 && coin % burstCoinInterval == 0)
+        {
+            Player player = Object.FindObjectOfType<Player>();
+            if (player != null)
+            {
+                player.ActivateBurst(burstDuration);
+            }
+        }
                
         }
 
